@@ -1,6 +1,6 @@
 from aws_cdk import (
     # Duration,
-    Stack,
+    Stack,pipelines,
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -10,10 +10,13 @@ class PipelineStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # The code that defines your stack goes here
+        pipeline = pipelines.CodePipeline(self, "Pipeline",
+            synth=pipelines.ShellStep("Synth",
+                # Use a connection created using the AWS console to authenticate to GitHub
+                # Other sources are available.
+                input=pipelines.CodePipelineSource.git_hub("FarrOut/CDKPipeline", "main"),
 
-        # example resource
-        # queue = sqs.Queue(
-        #     self, "PipelineQueue",
-        #     visibility_timeout=Duration.seconds(300),
-        # )
+                commands=["npm ci", "npm run build", "npx cdk synth"
+                ]
+            )
+        )
