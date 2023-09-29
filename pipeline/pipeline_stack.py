@@ -16,7 +16,6 @@ class PipelineStack(Stack):
                 # Other sources are available.
                 input=pipelines.CodePipelineSource.git_hub("FarrOut/CDKPipeline", "main"),
 
-                commands=["npm ci", "npm run build", "npx cdk synth"
-                ]
+                commands=["pip install -r requirements.txt", "npm install -g aws-cdk", "cdk synth"]
             )
         )
